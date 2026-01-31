@@ -8,96 +8,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --primary: #065f46;
-            --secondary: #047857;
-            --accent: #fbbf24;
-        }
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background-color: #fcfdfd; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        .quran-font {
-            font-family: 'Amiri', serif;
-            font-feature-settings: "cv08" on, "cv11" on, "ss01" on;
-        }
-
+        :root { --primary: #065f46; --secondary: #047857; --accent: #fbbf24; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #fcfdfd; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .quran-font { font-family: 'Amiri', serif; font-feature-settings: "cv08" on, "cv11" on, "ss01" on; }
         * { font-style: normal !important; }
-
         .onboarding-screen { display: none; }
         .onboarding-screen.active { display: flex; animation: fadeIn 0.3s ease-out; }
-        
-        @keyframes fadeIn { 
-            from { opacity: 0; } 
-            to { opacity: 1; } 
-        }
-        
-        .modal-overlay { 
-            background: rgba(0, 0, 0, 0.6); 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            z-index: 150; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
-            backdrop-filter: blur(4px); 
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-overlay { background: rgba(0, 0, 0, 0.6); display: none; position: fixed; inset: 0; z-index: 150; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
         .modal-overlay.active { display: flex; }
-        .modal-card { 
-            background: white; 
-            border-radius: 1.5rem; 
-            width: 100%; 
-            max-width: 400px; 
-            padding: 2rem; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); 
-        }
-
-        .progress-container {
-            width: 100%;
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 999px;
-            overflow: hidden;
-            height: 12px;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #fbbf24;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .app-input {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            font-size: 0.9rem;
-        }
-        .gender-btn.active, .offset-btn.active {
-            background-color: #fbbf24;
-            color: #064e3b;
-            border-color: #fbbf24;
-        }
-
-        .day-card {
-            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03);
-            transition: background-color 0.3s ease;
-        }
-        
-        .prayer-item.completed {
-            background-color: #f0fdf4 !important;
-            border-color: #bbf7d0 !important;
-        }
-
-        .day-card.completed-bg {
-            background-color: #f0fdf4 !important;
-        }
+        .modal-card { background: white; border-radius: 1.5rem; width: 100%; max-width: 400px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .progress-container { width: 100%; background-color: rgba(0,0,0,0.2); border-radius: 999px; overflow: hidden; height: 12px; }
+        .progress-fill { height: 100%; background-color: #fbbf24; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .app-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); font-size: 0.9rem; }
+        .gender-btn.active, .offset-btn.active { background-color: #fbbf24; color: #064e3b; border-color: #fbbf24; }
+        .day-card { box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03); transition: background-color 0.3s ease; }
+        .prayer-item.completed { background-color: #f0fdf4 !important; border-color: #bbf7d0 !important; }
+        .day-card.completed-bg { background-color: #f0fdf4 !important; }
     </style>
 </head>
 <body class="text-gray-700 min-h-screen">
 
-    <!-- واجهة الدخول -->
     <div id="onboarding" class="fixed inset-0 z-[200] bg-emerald-900 text-white flex flex-col p-6 overflow-y-auto">
         <div id="step-1" class="onboarding-screen active flex-col items-center justify-center h-full text-center space-y-12">
             <h1 class="text-5xl font-bold tracking-tight text-yellow-500">مبادرة مأوَى</h1>
@@ -106,159 +37,72 @@
                 <div class="h-[1px] bg-white/10 w-24 mx-auto"></div>
                 <p class="text-lg font-medium text-emerald-100">رفيقك المنظم لتتبع وردك اليومي وختمتك في رمضان</p>
             </div>
-            <button onclick="nextStep(2)" class="bg-yellow-500 text-emerald-950 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-yellow-400 transition-all transform active:scale-95">ابدأ الآن</button>
-            <div class="absolute bottom-6 text-[10px] opacity-40 font-medium">جميع الحقوق محفوظة لمبادرة مأوَى © ٢٠٢٦</div>
+            <button onclick="nextStep(2)" class="bg-yellow-500 text-emerald-950 px-10 py-4 rounded-full font-bold text-lg shadow-lg">ابدأ الآن</button>
         </div>
 
         <div id="step-2" class="onboarding-screen flex-col items-center justify-center h-full space-y-5 w-full max-w-sm mx-auto text-right">
             <h2 class="text-2xl font-bold text-center mb-2">معلومات الملف</h2>
             <div class="w-full space-y-4">
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-emerald-200 mr-1">الإسم الثلاثي *</label>
-                    <input type="text" id="user-name" placeholder="محمد بن عبدالله بن عبدالمطلب" class="app-input w-full p-4 rounded-xl text-white">
-                </div>
+                <input type="text" id="user-name" placeholder="الإسم الثلاثي *" class="app-input w-full p-4 rounded-xl text-white">
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-emerald-200 mr-1">العمر *</label>
-                        <input type="number" id="user-age" placeholder="25" class="app-input w-full p-4 rounded-xl text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold mb-1.5 text-emerald-200 mr-1">رقم الهاتف *</label>
-                        <input type="tel" id="user-phone" placeholder="05xxxxxxxx" class="app-input w-full p-4 rounded-xl text-white">
-                    </div>
+                    <input type="number" id="user-age" placeholder="العمر *" class="app-input w-full p-4 rounded-xl text-white">
+                    <input type="tel" id="user-phone" placeholder="رقم الهاتف *" class="app-input w-full p-4 rounded-xl text-white">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold mb-1.5 text-emerald-200 mr-1">الجنس *</label>
-                    <div class="flex gap-2">
-                        <button onclick="setGender('ذكر')" id="gender-male" class="gender-btn flex-1 py-3 rounded-xl border border-white/20 bg-white/5 text-sm font-bold">ذكر</button>
-                        <button onclick="setGender('أنثى')" id="gender-female" class="gender-btn flex-1 py-3 rounded-xl border border-white/20 bg-white/5 text-sm font-bold">أنثى</button>
-                    </div>
+                <div class="flex gap-2">
+                    <button onclick="setGender('ذكر')" id="gender-male" class="gender-btn flex-1 py-3 rounded-xl border border-white/20 bg-white/5 text-sm font-bold">ذكر</button>
+                    <button onclick="setGender('أنثى')" id="gender-female" class="gender-btn flex-1 py-3 rounded-xl border border-white/20 bg-white/5 text-sm font-bold">أنثى</button>
                 </div>
-                <p id="error-msg" class="text-red-300 text-xs hidden text-center font-bold">يرجى تعبئة جميع الحقول والاسم الثلاثي</p>
+                <p id="error-msg" class="text-red-300 text-xs hidden text-center font-bold">يرجى تعبئة جميع الحقول بشكل صحيح</p>
             </div>
-            <button onclick="validateAndNext(3)" class="bg-white text-emerald-900 w-full py-4 rounded-xl font-bold text-base shadow-lg">التالي</button>
+            <button onclick="validateAndNext(3)" class="bg-white text-emerald-900 w-full py-4 rounded-xl font-bold">التالي</button>
         </div>
 
         <div id="step-3" class="onboarding-screen flex-col items-center justify-center h-full space-y-6 w-full max-w-sm mx-auto text-center">
-            <div class="text-5xl text-yellow-500">🔔</div>
-            <h2 class="text-2xl font-bold">تنبيهات الورد اليومي</h2>
-            <div class="bg-black/20 p-6 rounded-3xl border border-white/5 space-y-4 text-sm leading-relaxed">
-                <p>هل ترغب في تلقي إشعارات لتذكيرك بالورد المطلوب عند كل صلاة؟</p>
-                <div class="bg-emerald-800/40 p-3 rounded-xl text-xs text-yellow-100 text-right">
-                    <p class="font-bold mb-1">ملاحظات هامة:</p>
-                    <ul class="list-disc list-inside space-y-2 opacity-95">
-                        <li>تعتمد أوقات التذكير على <b>تقويم أم القرى</b>.</li>
-                        <li>يجب السماح للمتصفح بإرسال التنبيهات عند الطلب.</li>
-                        <li><b>لمستخدمي iPhone:</b> يجب إضافة الموقع إلى (الشاشة الرئيسية) عبر سهم المشاركة ثم "إضافة إلى الشاشة الرئيسية" لتعمل التنبيهات.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="flex flex-col w-full gap-3">
-                <button onclick="nextStep(4)" class="bg-yellow-500 text-emerald-950 py-4 rounded-xl font-bold text-base shadow-lg">تفعيل التنبيهات</button>
-                <button onclick="completeOnboarding(false)" class="text-white/60 text-sm font-bold py-2">تخطي الآن</button>
-            </div>
-        </div>
-
-        <div id="step-4" class="onboarding-screen flex-col items-center justify-center h-full space-y-5 w-full max-w-sm mx-auto text-center">
-            <h2 class="text-xl font-bold mb-2">اختر وقت التذكير المناسب</h2>
-            <div class="w-full space-y-3" id="offset-options">
-                <button onclick="setOffset(-15)" class="offset-btn w-full p-4 rounded-xl bg-white/5 border border-white/10 text-right flex justify-between items-center transition-colors">
-                    <span class="text-sm font-bold">قبل الأذان بـ 15 دقيقة</span>
-                </button>
-                <button onclick="setOffset(0)" class="offset-btn w-full p-4 rounded-xl bg-white/5 border border-white/10 text-right flex justify-between items-center transition-colors">
-                    <span class="text-sm font-bold">قبل الأذان بـ 5 دقائق</span>
-                </button>
-                <button onclick="setOffset(30)" class="offset-btn w-full p-4 rounded-xl bg-white/5 border border-white/10 text-right flex justify-between items-center transition-colors">
-                    <span class="text-sm font-bold">بعد الأذان بساعة</span>
-                </button>
-            </div>
-            <input type="hidden" id="selected-offset" value="0">
-            <button onclick="completeOnboarding(true)" class="bg-yellow-500 text-emerald-950 w-full py-4 rounded-xl font-bold text-lg shadow-lg">ابدأ رحلتك</button>
+            <h2 class="text-2xl font-bold">بدء الرحلة</h2>
+            <p>سيتم حفظ بياناتك بشكل آمن لمتابعة ختمتك من أي جهاز.</p>
+            <button onclick="completeOnboarding(true)" class="bg-yellow-500 text-emerald-950 w-full py-4 rounded-xl font-bold">ابدأ الآن</button>
         </div>
     </div>
 
-    <!-- الواجهة الرئيسية -->
     <div id="app-content" style="display:none;">
-        <div class="bg-emerald-50 text-emerald-800 py-2.5 text-center text-xs font-bold border-b border-emerald-100">
-            "لا تنسوني ووالديّ من صالح دعائكم"
-        </div>
-
         <header class="bg-emerald-900 text-white rounded-b-[2.5rem] pb-12 pt-8 px-6 shadow-lg">
             <div class="max-w-md mx-auto">
                 <div class="flex justify-between items-center mb-8">
                     <div class="text-right">
-                        <p class="text-[10px] text-emerald-200 font-bold mb-1 opacity-70 uppercase tracking-wider">مرحباً</p>
+                        <p class="text-[10px] text-emerald-200 font-bold mb-1">مرحباً</p>
                         <h1 id="display-name" class="text-xl font-bold leading-tight">...</h1>
                     </div>
                     <div class="text-center">
-                        <span id="progress-percentage" class="text-3xl font-bold text-yellow-400 block leading-none">0%</span>
-                        <p class="text-[9px] font-bold opacity-50 mt-1 uppercase tracking-tighter">الإنجاز الكلي</p>
+                        <span id="progress-percentage" class="text-3xl font-bold text-yellow-400 block">0%</span>
+                        <p class="text-[9px] font-bold opacity-50 uppercase">الإنجاز الكلي</p>
                     </div>
                 </div>
-                <div class="space-y-3">
-                    <div class="progress-container">
-                        <div id="progress-bar" class="progress-fill" style="width: 0%"></div>
-                    </div>
-                    <div class="flex justify-between text-[10px] font-bold text-emerald-100 px-1 opacity-80">
-                        <span id="pages-count-display">تم قراءة: 0 صفحة</span>
-                        <span>الهدف: 604 صفحة</span>
-                    </div>
-                </div>
+                <div class="progress-container"><div id="progress-bar" class="progress-fill" style="width: 0%"></div></div>
+                <p id="pages-count-display" class="text-center text-[10px] mt-2 opacity-80">تم قراءة: 0 صفحة</p>
             </div>
         </header>
-
         <main class="max-w-md mx-auto px-4 -mt-6 space-y-4" id="days-container"></main>
-
-        <footer class="max-w-md mx-auto px-6 mt-10 mb-8 space-y-5">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-center space-y-5">
-                <div class="text-emerald-900 font-bold text-xs pb-3 border-b border-gray-50">"لا تنسوني ووالديّ من صالح دعائكم"</div>
-                <div class="flex flex-col gap-3">
-                    <button onclick="showSupportModal()" class="flex items-center justify-center gap-3 w-full bg-emerald-50 text-emerald-800 py-4 rounded-2xl border border-emerald-100 font-bold text-sm">
-                        <span>❤️</span>
-                        <span>دعم استمرار المبادرة</span>
-                    </button>
-                    <p class="text-[10px] text-gray-400 font-medium tracking-wide">للتواصل عبر <span class="font-bold">Telegram</span>: <span class="text-emerald-700 font-bold">@uvlna</span></p>
-                </div>
-            </div>
-            <div class="text-center">
-                <button onclick="confirmReset()" class="text-[9px] text-gray-300 font-bold hover:text-red-400 uppercase tracking-widest">تصفير البيانات</button>
-            </div>
-        </footer>
     </div>
 
-    <!-- المودالات المحدثة لتناسب طلبك -->
-    <div id="alertBox" class="modal-overlay">
-        <div class="modal-card text-center space-y-5">
-            <div id="alertIcon" class="text-5xl">⭐</div>
-            <h3 id="alertTitle" class="text-lg font-bold text-emerald-900"></h3>
-            <p id="alertText" class="text-sm text-gray-600 leading-relaxed font-medium"></p>
-            <button onclick="closeAlert()" class="w-full py-4 bg-emerald-700 text-white rounded-xl font-bold text-base shadow-lg">حفظ</button>
-        </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <div id="smart-modal" class="modal-overlay">
-        <div class="modal-card text-center space-y-5">
-            <div class="text-4xl">⚡</div>
-            <h3 class="text-lg font-bold">تحديد ذكي</h3>
-            <p id="smart-text" class="text-sm text-gray-600 leading-relaxed font-medium"></p>
-            <div class="flex gap-3">
-                <button id="smart-yes" class="flex-1 bg-emerald-700 text-white py-4 rounded-xl font-bold text-sm shadow-md">نعم، الكل</button>
-                <button id="smart-no" class="flex-1 bg-gray-100 text-gray-600 py-4 rounded-xl font-bold text-sm">هذا اليوم فقط</button>
-            </div>
-        </div>
-    </div>
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmzn1ZRonUVaR341VRhhXDe6L9xCYY36c",
+            authDomain: "ramadan-tracker-df2a4.firebaseapp.com",
+            projectId: "ramadan-tracker-df2a4",
+            storageBucket: "ramadan-tracker-df2a4.firebasestorage.app",
+            messagingSenderId: "647463916903",
+            appId: "1:647463916903:web:59349a5822425c09ff8bc2",
+            measurementId: "G-1G0XW66KPS"
+        };
 
-    <div id="support-modal" class="modal-overlay">
-        <div class="modal-card text-right space-y-5 relative">
-            <button onclick="closeModal('support-modal')" class="absolute top-4 left-4 text-gray-300">✕</button>
-            <h3 class="text-xl font-bold text-center text-emerald-900">مساهمة في الخير</h3>
-            <p class="text-sm text-gray-600 leading-loose text-center font-medium">هذا التطبيق وقف لله تعالى، مساهمتكم تساعد في تطوير واستمرار المشروع.</p>
-            <div class="p-4 bg-emerald-50 rounded-2xl border border-dashed border-emerald-200 text-center font-bold text-emerald-800 text-xs">بيانات الدعم تظهر هنا</div>
-            <button onclick="closeModal('support-modal')" class="w-full py-4 bg-emerald-800 text-white rounded-xl font-bold text-base">تقبل الله منكم</button>
-        </div>
-    </div>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    <script>
+        // متغيرات التطبيق
         const TOTAL_PAGES = 604;
         const TOTAL_DAYS = 29;
         const PRAYERS_CONFIG = [
@@ -269,90 +113,69 @@
             { id: 'isha', name: 'ورد العشاء', pages: 4 }
         ];
 
-        const dayNames = [
-            "الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر",
-            "الحادي عشر", "الثاني عشر", "الثالث عشر", "الرابع عشر", "الخامس عشر", "السادس عشر", "السابع عشر", "الثامن عشر", "التاسع عشر", "العشرون",
-            "الحادي والعشرون", "الثاني والعشرون", "الثالث والعشرون", "الرابع والعشرون", "الخامس والعشرون", "السادس والعشرون", "السابع والعشرون", "الثامن والعشرون", "التاسع والعشرون"
-        ];
-
         let userData = JSON.parse(localStorage.getItem('ramadanUserData')) || null;
         let userProgress = JSON.parse(localStorage.getItem('ramadanKhatmaProgress')) || {};
         let selectedGender = null;
 
-        // --- وظائف التنبيهات الجديدة (محاكاة للكود الذي أرسلته) ---
-        function checkMilestones(day) {
-            if (isDayFullyCompleted(day)) {
-                if (day === 10) {
-                    showAlert("مضت العشر الأوائل", "انقضت أول عشرة أيام من رمضان.. بادر وجدد نيتك، ولا تنسَ المداومة على الصدقة ولو بالقليل.", "⭐");
-                } else if (day === 20) {
-                    showAlert("دخلنا في العشر الأواخر", "استعد لزيادة الهمة والعمل، فقد كان النبي ﷺ يشد مئزره فيها. استكثر من قول: (اللهمَّ إنك عفوٌّ تُحبُّ العفوَ فاعفُ عنِّي)", "🌙");
-                } else if (day === 29) {
-                    // تم دمج الرسالتين كما في منطق الكود المطلوب
-                    showAlert("ختم الله لك بالقبول", "هنيئاً لك إتمام الختمة، نسأل الله أن يتقبل منك ومن والدينا صالح الأعمال. انتهى رمضان يا صاحبي ولم ينته القرآن بعد، ولم تنته الصلاة، ولم ينته الدعاء والسجود والقيام والصدق مع الله، إياك أن تكون عبدًا موسميًا؛ تعرف ربك في رمضان وتغيب عنه بعده.", "🎉");
-                    triggerConfetti();
-                }
-            }
+        // --- وظائف Firebase ---
+        
+        // حفظ بيانات المستخدم لأول مرة
+        async function syncUserToFirebase(data) {
+            try {
+                await setDoc(doc(db, "users", data.phone), {
+                    profile: data,
+                    progress: userProgress,
+                    lastActive: new Date()
+                }, { merge: true });
+            } catch (e) { console.error("Firebase Sync Error: ", e); }
         }
 
-        function isDayFullyCompleted(day) {
-            const prayers = getPrayersForDay(day);
-            return prayers.every(p => userProgress[`day-${day}-${p.id}`]);
+        // تحديث التقدم في Firebase
+        async function updateFirebaseProgress() {
+            if (!userData) return;
+            try {
+                const userRef = doc(db, "users", userData.phone);
+                await updateDoc(userRef, {
+                    progress: userProgress,
+                    lastUpdate: new Date()
+                });
+            } catch (e) { console.error("Update Error: ", e); }
         }
 
-        function showAlert(title, text, icon) {
-            const box = document.getElementById('alertBox');
-            document.getElementById('alertTitle').innerText = title;
-            document.getElementById('alertText').innerText = text;
-            document.getElementById('alertIcon').innerText = icon;
-            box.classList.add('active');
-        }
+        // --- وظائف الواجهة ---
 
-        function closeAlert() {
-            document.getElementById('alertBox').classList.remove('active');
-        }
-
-        // --- وظائف التطبيق الأساسية ---
-
-        function nextStep(step) {
+        window.nextStep = (step) => {
             document.querySelectorAll('.onboarding-screen').forEach(s => s.classList.remove('active'));
             document.getElementById('step-' + step).classList.add('active');
-        }
+        };
 
-        function setGender(g) {
+        window.setGender = (g) => {
             selectedGender = g;
             document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(g === 'ذكر' ? 'gender-male' : 'gender-female').classList.add('active');
-        }
+        };
 
-        function setOffset(val) {
-            document.getElementById('selected-offset').value = val;
-            document.querySelectorAll('.offset-btn').forEach(b => b.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        function validateAndNext(step) {
+        window.validateAndNext = (step) => {
             const name = document.getElementById('user-name').value.trim();
-            const age = document.getElementById('user-age').value;
             const phone = document.getElementById('user-phone').value.trim();
-            if (name.split(/\s+/).length < 3 || !age || !phone || !selectedGender) {
+            if (name.split(/\s+/).length < 2 || !phone || !selectedGender) {
                 document.getElementById('error-msg').classList.remove('hidden');
                 return;
             }
             nextStep(step);
-        }
+        };
 
-        function completeOnboarding(wantsNotifications) {
+        window.completeOnboarding = async (notif) => {
             userData = {
                 name: document.getElementById('user-name').value,
-                age: document.getElementById('user-age').value,
                 phone: document.getElementById('user-phone').value,
                 gender: selectedGender,
-                wantsNotifications,
-                reminderOffset: document.getElementById('selected-offset').value
+                age: document.getElementById('user-age').value
             };
             localStorage.setItem('ramadanUserData', JSON.stringify(userData));
+            await syncUserToFirebase(userData);
             startApp();
-        }
+        };
 
         function startApp() {
             document.getElementById('onboarding').style.display = 'none';
@@ -362,190 +185,63 @@
             updateStats();
         }
 
-        function smartDayComplete(day) {
-            const currentPrayers = getPrayersForDay(day);
-            const isCurrentlyComplete = currentPrayers.every(p => userProgress[`day-${day}-${p.id}`]);
-
-            if (!isCurrentlyComplete) {
-                let lastFullDay = 0;
-                for (let d = 1; d < day; d++) {
-                    const dPrayers = getPrayersForDay(d);
-                    if (dPrayers.every(p => userProgress[`day-${d}-${p.id}`])) lastFullDay = d;
-                }
-                
-                if (day - lastFullDay > 1) {
-                    document.getElementById('smart-text').textContent = `تحديد جميع الأيام السابقة حتى اليوم ${dayNames[day-1]} كمكتملة؟`;
-                    document.getElementById('smart-modal').classList.add('active');
-                    
-                    document.getElementById('smart-yes').onclick = () => {
-                        for (let d = 1; d <= day; d++) {
-                            getPrayersForDay(d).forEach(p => userProgress[`day-${d}-${p.id}`] = true);
-                            saveAndRefreshUI(d);
-                        }
-                        closeModal('smart-modal');
-                        checkMilestones(day);
-                    };
-                    
-                    document.getElementById('smart-no').onclick = () => {
-                        currentPrayers.forEach(p => userProgress[`day-${day}-${p.id}`] = true);
-                        closeModal('smart-modal');
-                        saveAndRefreshUI(day);
-                        checkMilestones(day);
-                    };
-                } else {
-                    currentPrayers.forEach(p => userProgress[`day-${day}-${p.id}`] = true);
-                    saveAndRefreshUI(day);
-                    checkMilestones(day);
-                }
-            } else {
-                currentPrayers.forEach(p => delete userProgress[`day-${day}-${p.id}`]);
-                saveAndRefreshUI(day);
-            }
-        }
-
-        function getPrayersForDay(day) { 
-            return day === 29 ? PRAYERS_CONFIG.slice(0, 4) : PRAYERS_CONFIG; 
-        }
-
         function renderSchedule() {
             const container = document.getElementById('days-container');
             container.innerHTML = '';
             let pageCounter = 1;
 
             for (let day = 1; day <= TOTAL_DAYS; day++) {
-                const prayers = getPrayersForDay(day);
-                const isDayComplete = prayers.every(p => userProgress[`day-${day}-${p.id}`]);
-                let dayTotalPages = 0;
-                
+                const prayers = (day === 29) ? PRAYERS_CONFIG.slice(0, 4) : PRAYERS_CONFIG;
                 let prayersHtml = '';
+                
                 prayers.forEach(p => {
                     const startP = pageCounter;
                     const endP = Math.min(604, pageCounter + p.pages - 1);
                     pageCounter += p.pages;
-                    dayTotalPages += p.pages;
                     const key = `day-${day}-${p.id}`;
                     const isChecked = userProgress[key] ? 'checked' : '';
                     
                     prayersHtml += `
-                        <label class="block mb-2 cursor-pointer prayer-label" data-key="${key}">
-                            <input type="checkbox" class="prayer-checkbox sr-only" onchange="togglePrayer('${key}', ${day})" ${isChecked}>
-                            <div class="prayer-item p-4 rounded-xl border border-gray-100 bg-white flex justify-between items-center transition-all hover:border-emerald-200 ${isChecked ? 'completed' : ''}">
-                                <div>
-                                    <span class="font-bold text-xs block text-gray-700 mb-0.5">${p.name}</span>
-                                    <span class="text-[10px] text-emerald-600 font-medium">صفحة ${startP} إلى ${endP}</span>
-                                </div>
-                                <div class="w-5 h-5 rounded-md border border-emerald-100 flex items-center justify-center bg-gray-50">
-                                    <svg class="w-3.5 h-3.5 text-emerald-600 check-svg ${isChecked ? '' : 'hidden'}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </div>
+                        <div class="prayer-item p-3 mb-2 rounded-xl border flex justify-between items-center ${isChecked ? 'completed' : 'bg-white'}" onclick="togglePrayer('${key}', ${day})">
+                            <div class="text-right">
+                                <span class="font-bold text-xs block">${p.name}</span>
+                                <span class="text-[10px] text-emerald-600">صفحة ${startP} إلى ${endP}</span>
                             </div>
-                        </label>`;
+                            <input type="checkbox" ${isChecked} class="w-5 h-5 accent-emerald-600">
+                        </div>`;
                 });
 
                 const dayCard = document.createElement('div');
-                dayCard.id = `day-card-${day}`;
-                dayCard.className = `day-card bg-white rounded-2xl border border-gray-100 overflow-hidden ${isDayComplete ? 'completed-bg' : ''}`;
-                dayCard.innerHTML = `
-                    <details class="group" ${day === 1 && !isDayComplete ? 'open' : ''}>
-                        <summary class="flex justify-between items-center p-4 cursor-pointer list-none">
-                            <div class="flex items-center gap-4 text-right">
-                                <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm">${day}</span>
-                                <div>
-                                    <h3 class="font-bold text-sm text-gray-800">اليوم ${dayNames[day-1]}</h3>
-                                    <p class="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">إجمالي ورد اليوم: ${dayTotalPages} صفحة</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="event.preventDefault(); smartDayComplete(${day})" class="complete-day-btn w-8 h-8 rounded-full border flex items-center justify-center transition-all ${isDayComplete ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-gray-100 text-gray-200'}">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                                </button>
-                                <div class="text-gray-200 group-open:rotate-180 transition-transform duration-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </div>
-                            </div>
-                        </summary>
-                        <div class="px-4 pb-4 bg-gray-50/40 border-t border-gray-50 pt-3">${prayersHtml}</div>
-                    </details>`;
+                dayCard.className = `day-card bg-white p-4 rounded-2xl border ${prayers.every(p => userProgress[`day-${day}-${p.id}`]) ? 'completed-bg' : ''}`;
+                dayCard.innerHTML = `<h3 class="font-bold mb-3">اليوم ${day}</h3>${prayersHtml}`;
                 container.appendChild(dayCard);
             }
         }
 
-        function togglePrayer(key, day) {
-            if (userProgress[key]) delete userProgress[key]; else userProgress[key] = true;
-            checkMilestones(day);
-            saveAndRefreshUI(day);
-        }
-
-        function saveAndRefreshUI(day) {
+        window.togglePrayer = async (key, day) => {
+            if (userProgress[key]) delete userProgress[key]; 
+            else userProgress[key] = true;
+            
             localStorage.setItem('ramadanKhatmaProgress', JSON.stringify(userProgress));
-            const dayCard = document.getElementById(`day-card-${day}`);
-            if (!dayCard) return;
-
-            const prayers = getPrayersForDay(day);
-            const isDayComplete = prayers.every(p => userProgress[`day-${day}-${p.id}`]);
-            if (isDayComplete) dayCard.classList.add('completed-bg');
-            else dayCard.classList.remove('completed-bg');
-
-            const btn = dayCard.querySelector('.complete-day-btn');
-            if (isDayComplete) btn.classList.add('bg-emerald-600', 'border-emerald-600', 'text-white');
-            else btn.classList.remove('bg-emerald-600', 'border-emerald-600', 'text-white');
-
-            prayers.forEach(p => {
-                const key = `day-${day}-${p.id}`;
-                const label = dayCard.querySelector(`[data-key="${key}"]`);
-                if (label) {
-                    const item = label.querySelector('.prayer-item');
-                    const check = label.querySelector('.check-svg');
-                    const input = label.querySelector('input');
-                    input.checked = !!userProgress[key];
-                    if (userProgress[key]) {
-                        item.classList.add('completed');
-                        check.classList.remove('hidden');
-                    } else {
-                        item.classList.remove('completed');
-                        check.classList.add('hidden');
-                    }
-                }
-            });
+            renderSchedule();
             updateStats();
-        }
+            await updateFirebaseProgress();
+        };
 
         function updateStats() {
             let readPages = 0;
             for (let d = 1; d <= TOTAL_DAYS; d++) {
-                getPrayersForDay(d).forEach(p => { if (userProgress[`day-${d}-${p.id}`]) readPages += p.pages; });
+                const prayers = (d === 29) ? PRAYERS_CONFIG.slice(0, 4) : PRAYERS_CONFIG;
+                prayers.forEach(p => { if (userProgress[`day-${d}-${p.id}`]) readPages += p.pages; });
             }
-            readPages = Math.min(readPages, TOTAL_PAGES);
-            const pct = Math.min(100, Math.round((readPages / TOTAL_PAGES) * 100));
+            const pct = Math.round((readPages / TOTAL_PAGES) * 100);
             document.getElementById('progress-bar').style.width = pct + '%';
             document.getElementById('progress-percentage').textContent = pct + '%';
-            document.getElementById('pages-count-display').textContent = `تم قراءة: ${readPages} صفحة`;
+            document.getElementById('pages-count-display').textContent = `تم قراءة: ${readPages} صفحة من 604`;
+            if(pct === 100) confetti();
         }
 
-        function triggerConfetti() {
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#fbbf24', '#047857', '#ffffff']
-            });
-        }
-
-        function showSupportModal() { document.getElementById('support-modal').classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-        function confirmReset() {
-            if (confirm('هل أنت متأكد من رغبتك في تصفير جميع البيانات؟ لا يمكن التراجع عن هذه الخطوة.')) {
-                localStorage.removeItem('ramadanKhatmaProgress');
-                localStorage.removeItem('ramadanUserData');
-                location.reload();
-            }
-        }
-
-        window.onload = () => {
-            if (userData) startApp();
-        };
+        window.onload = () => { if (userData) startApp(); };
     </script>
 </body>
 </html>
