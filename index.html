@@ -99,7 +99,6 @@
 
     <!-- واجهة الدخول -->
     <div id="onboarding" class="fixed inset-0 z-[200] bg-emerald-900 text-white flex flex-col p-6 overflow-y-auto">
-        
         <div id="step-1" class="onboarding-screen active flex-col items-center justify-center h-full text-center space-y-12">
             <h1 class="text-5xl font-bold tracking-tight text-yellow-500">مبادرة مأوَى</h1>
             <div class="space-y-6 w-full max-w-lg">
@@ -188,7 +187,6 @@
             <div class="max-w-md mx-auto">
                 <div class="flex justify-between items-center mb-8">
                     <div class="text-right">
-                        <p class="text-[10px] text-emerald-200 font-bold mb-1 opacity-70 uppercase tracking-wider">ملف الختمة</p>
                         <p class="text-[10px] text-emerald-200 font-bold mb-1 opacity-70 uppercase tracking-wider">مرحباً</p>
                         <h1 id="display-name" class="text-xl font-bold leading-tight">...</h1>
                     </div>
@@ -228,7 +226,16 @@
         </footer>
     </div>
 
-    <!-- المودالات -->
+    <!-- المودالات المحدثة لتناسب طلبك -->
+    <div id="alertBox" class="modal-overlay">
+        <div class="modal-card text-center space-y-5">
+            <div id="alertIcon" class="text-5xl">⭐</div>
+            <h3 id="alertTitle" class="text-lg font-bold text-emerald-900"></h3>
+            <p id="alertText" class="text-sm text-gray-600 leading-relaxed font-medium"></p>
+            <button onclick="closeAlert()" class="w-full py-4 bg-emerald-700 text-white rounded-xl font-bold text-base shadow-lg">حفظ</button>
+        </div>
+    </div>
+
     <div id="smart-modal" class="modal-overlay">
         <div class="modal-card text-center space-y-5">
             <div class="text-4xl">⚡</div>
@@ -242,23 +249,12 @@
     </div>
 
     <div id="support-modal" class="modal-overlay">
-        <div class="modal-card text-right space-y-5">
-            <button onclick="closeModal('support-modal')" class="absolute top-6 left-6 text-gray-300">✕</button>
+        <div class="modal-card text-right space-y-5 relative">
+            <button onclick="closeModal('support-modal')" class="absolute top-4 left-4 text-gray-300">✕</button>
             <h3 class="text-xl font-bold text-center text-emerald-900">مساهمة في الخير</h3>
             <p class="text-sm text-gray-600 leading-loose text-center font-medium">هذا التطبيق وقف لله تعالى، مساهمتكم تساعد في تطوير واستمرار المشروع.</p>
             <div class="p-4 bg-emerald-50 rounded-2xl border border-dashed border-emerald-200 text-center font-bold text-emerald-800 text-xs">بيانات الدعم تظهر هنا</div>
             <button onclick="closeModal('support-modal')" class="w-full py-4 bg-emerald-800 text-white rounded-xl font-bold text-base">تقبل الله منكم</button>
-        </div>
-    </div>
-
-    <div id="msg-modal" class="modal-overlay">
-        <div class="modal-card text-center space-y-5">
-            <div id="modal-icon" class="text-5xl">🌟</div>
-            <div id="modal-text-container" class="space-y-4">
-                <p id="modal-text" class="text-gray-800 font-bold text-lg leading-relaxed"></p>
-                <div id="extra-note" class="text-emerald-700 text-sm font-medium leading-relaxed bg-emerald-50 p-3 rounded-xl hidden"></div>
-            </div>
-            <button id="modal-btn" onclick="handleModalClose()" class="w-full py-4 bg-emerald-700 text-white rounded-xl font-bold text-base shadow-lg">حفظ</button>
         </div>
     </div>
 
@@ -279,19 +275,43 @@
             "الحادي والعشرون", "الثاني والعشرون", "الثالث والعشرون", "الرابع والعشرون", "الخامس والعشرون", "السادس والعشرون", "السابع والعشرون", "الثامن والعشرون", "التاسع والعشرون"
         ];
 
-        const SPECIAL_NOTES = {
-            7: "مضى أسبوع من الخير.. تذكروا الدعاء للموتى، فهم أحوج ما يكونون إليه.",
-            10: "عشر الرحمة تقترب من التمام.. أكثروا من الصدقة، لقوله ﷺ: ما نقص مالٌ من صدقة",
-            20: "بدأت العشر الأواخر.. شمروا واجتهدوا، ففيها ليلةٌ خير من ألف شهر.",
-            21: "يستحب الاكثار من قول « اللهمَّ إنك عفوٌّ تُحبُّ العفوَ فاعفُ عنِّي »"
-        };
-
-        const COMPLETION_TEXT = "ذهب رمضان، وانقضت العشر، لكن القرآن لم ينتهِ، ولا الصلاة، ولا الصدق مع الله. إياك أن تكون عبدًا موسميًا؛ تعرف ربك في رمضان وتغيب عنه بعده.";
-
         let userData = JSON.parse(localStorage.getItem('ramadanUserData')) || null;
         let userProgress = JSON.parse(localStorage.getItem('ramadanKhatmaProgress')) || {};
-        let pendingMessages = [];
         let selectedGender = null;
+
+        // --- وظائف التنبيهات الجديدة (محاكاة للكود الذي أرسلته) ---
+        function checkMilestones(day) {
+            if (isDayFullyCompleted(day)) {
+                if (day === 10) {
+                    showAlert("مضت العشر الأوائل", "انقضت أول عشرة أيام من رمضان.. بادر وجدد نيتك، ولا تنسَ المداومة على الصدقة ولو بالقليل.", "⭐");
+                } else if (day === 20) {
+                    showAlert("دخلنا في العشر الأواخر", "استعد لزيادة الهمة والعمل، فقد كان النبي ﷺ يشد مئزره فيها. استكثر من قول: (اللهمَّ إنك عفوٌّ تُحبُّ العفوَ فاعفُ عنِّي)", "🌙");
+                } else if (day === 29) {
+                    // تم دمج الرسالتين كما في منطق الكود المطلوب
+                    showAlert("ختم الله لك بالقبول", "هنيئاً لك إتمام الختمة، نسأل الله أن يتقبل منك ومن والدينا صالح الأعمال. انتهى رمضان يا صاحبي ولم ينته القرآن بعد، ولم تنته الصلاة، ولم ينته الدعاء والسجود والقيام والصدق مع الله، إياك أن تكون عبدًا موسميًا؛ تعرف ربك في رمضان وتغيب عنه بعده.", "🎉");
+                    triggerConfetti();
+                }
+            }
+        }
+
+        function isDayFullyCompleted(day) {
+            const prayers = getPrayersForDay(day);
+            return prayers.every(p => userProgress[`day-${day}-${p.id}`]);
+        }
+
+        function showAlert(title, text, icon) {
+            const box = document.getElementById('alertBox');
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertText').innerText = text;
+            document.getElementById('alertIcon').innerText = icon;
+            box.classList.add('active');
+        }
+
+        function closeAlert() {
+            document.getElementById('alertBox').classList.remove('active');
+        }
+
+        // --- وظائف التطبيق الأساسية ---
 
         function nextStep(step) {
             document.querySelectorAll('.onboarding-screen').forEach(s => s.classList.remove('active'));
@@ -350,9 +370,7 @@
                 let lastFullDay = 0;
                 for (let d = 1; d < day; d++) {
                     const dPrayers = getPrayersForDay(d);
-                    if (dPrayers.every(p => userProgress[`day-${d}-${p.id}`])) {
-                        lastFullDay = d;
-                    }
+                    if (dPrayers.every(p => userProgress[`day-${d}-${p.id}`])) lastFullDay = d;
                 }
                 
                 if (day - lastFullDay > 1) {
@@ -361,53 +379,28 @@
                     
                     document.getElementById('smart-yes').onclick = () => {
                         for (let d = 1; d <= day; d++) {
-                            const dPrayers = getPrayersForDay(d);
-                            dPrayers.forEach(p => userProgress[`day-${d}-${p.id}`] = true);
+                            getPrayersForDay(d).forEach(p => userProgress[`day-${d}-${p.id}`] = true);
                             saveAndRefreshUI(d);
                         }
                         closeModal('smart-modal');
-                        processCompletion(day);
+                        checkMilestones(day);
                     };
                     
                     document.getElementById('smart-no').onclick = () => {
                         currentPrayers.forEach(p => userProgress[`day-${day}-${p.id}`] = true);
                         closeModal('smart-modal');
                         saveAndRefreshUI(day);
-                        processCompletion(day);
+                        checkMilestones(day);
                     };
                 } else {
                     currentPrayers.forEach(p => userProgress[`day-${day}-${p.id}`] = true);
                     saveAndRefreshUI(day);
-                    processCompletion(day);
+                    checkMilestones(day);
                 }
             } else {
                 currentPrayers.forEach(p => delete userProgress[`day-${day}-${p.id}`]);
                 saveAndRefreshUI(day);
             }
-        }
-
-        function processCompletion(day) {
-            if (day < TOTAL_DAYS) {
-                const extra = SPECIAL_NOTES[day] || null;
-                pendingMessages.push({ 
-                    icon: "✨", 
-                    text: `تم إكمال ورد اليوم ${dayNames[day-1]} بنجاح.`,
-                    extra: extra
-                });
-                showNextMessage();
-            }
-        }
-
-        function showNextMessage() {
-            if (pendingMessages.length > 0) {
-                const msg = pendingMessages.shift();
-                showModal('msg-modal', msg.icon, msg.text, msg.extra);
-            }
-        }
-
-        function handleModalClose() {
-            closeModal('msg-modal');
-            setTimeout(showNextMessage, 300);
         }
 
         function getPrayersForDay(day) { 
@@ -480,8 +473,7 @@
 
         function togglePrayer(key, day) {
             if (userProgress[key]) delete userProgress[key]; else userProgress[key] = true;
-            const prayers = getPrayersForDay(day);
-            if (prayers.every(p => userProgress[`day-${day}-${p.id}`])) processCompletion(day);
+            checkMilestones(day);
             saveAndRefreshUI(day);
         }
 
@@ -529,71 +521,31 @@
             document.getElementById('progress-bar').style.width = pct + '%';
             document.getElementById('progress-percentage').textContent = pct + '%';
             document.getElementById('pages-count-display').textContent = `تم قراءة: ${readPages} صفحة`;
-            
-            if (pct === 100) {
-                const day29Prayers = getPrayersForDay(29);
-                const isFinalPrayerComplete = day29Prayers.every(p => userProgress[`day-29-${p.id}`]);
-                
-                if (isFinalPrayerComplete) {
-                    triggerConfetti();
-                    if (!pendingMessages.some(m => m.text.includes('هنيئاً'))) {
-                        pendingMessages.push({ 
-                            icon: "👑", 
-                            text: "هنيئاً لك الختمة.. تقبل الله طاعاتكم.",
-                            extra: COMPLETION_TEXT,
-                            isFinal: true
-                        });
-                        showNextMessage();
-                    }
-                }
-            }
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#fbbf24', '#047857', '#ffffff']
+            });
         }
 
         function showSupportModal() { document.getElementById('support-modal').classList.add('active'); }
-        
-        function showModal(id, icon, text, extra) {
-            document.getElementById('modal-icon').textContent = icon;
-            document.getElementById('modal-text').innerText = text;
-            const extraEl = document.getElementById('extra-note');
-            if (extra) {
-                extraEl.innerText = extra;
-                extraEl.classList.remove('hidden');
-                // تنسيق خاص لرسالة الختمة الطويلة
-                if (extra.includes("عبدًا موسميًا")) {
-                    extraEl.style.fontSize = "11px";
-                    extraEl.style.textAlign = "justify";
-                } else {
-                    extraEl.style.fontSize = "13px";
-                    extraEl.style.textAlign = "center";
-                }
-            } else {
-                extraEl.classList.add('hidden');
-            }
-            document.getElementById(id).classList.add('active');
-        }
-        
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-        
+
         function confirmReset() {
-            if (confirm('تصفير البيانات والبدء من جديد؟')) {
+            if (confirm('هل أنت متأكد من رغبتك في تصفير جميع البيانات؟ لا يمكن التراجع عن هذه الخطوة.')) {
                 localStorage.removeItem('ramadanKhatmaProgress');
                 localStorage.removeItem('ramadanUserData');
-                window.location.reload();
-            }
-        }
-        
-        function triggerConfetti() {
-            if (window.confetti) {
-                confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#fbbf24', '#065f46', '#34d399', '#ffffff']
-                });
+                location.reload();
             }
         }
 
-        window.onload = () => { if (userData) startApp(); else document.getElementById('onboarding').style.display = 'flex'; };
+        window.onload = () => {
+            if (userData) startApp();
+        };
     </script>
 </body>
 </html>
